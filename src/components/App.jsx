@@ -21,6 +21,7 @@ class App extends Component {
 const style = {
   global: {
     fontFamily: "'Fira Mono', monospace",
+    mnargin: 0,
 
     "& p": {
       fontWeight: "400"

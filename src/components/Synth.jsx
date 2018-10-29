@@ -42,7 +42,7 @@ class Synth extends React.Component {
   render() {
     const { classes } = this.props
     return (
-      <div className={classes.wrapper}>
+      <div className={`${classes.wrapper} ${this.state.playing ? classes.wrapperParty : null}`}>
         <h1>This is the synthesizer</h1>
         <div className={classes.knobHub}>
           <div className={classes.knob}
@@ -65,20 +65,46 @@ class Synth extends React.Component {
   }
 
   startLoop = () => {
+    this.setState({playing: true})
     Tone.Transport.start()
   }
 
   stopLoop = () => {
+    this.setState({playing: false})
     Tone.Transport.stop()
   }
 }
 
 const styles = {
+  "@keyframes colorchange": {
+    "0%": {
+      backgroundColor: "cyan"
+    },
+    "33%": {
+      backgroundColor: "yellow"
+    },
+    "66%": {
+      backgroundColor: "magenta"
+    },
+    "100%": {
+      backgroundColor: "cyan"
+    }
+  },
   wrapper: {
     margin: "0 auto",
-    marginLeft: 30,
+    paddingLeft: 30,
+    paddingTop: 30,
     height: "100vh",
     minWidth: "400px",
+  },
+  wrapperParty: {
+    backgroundColor: "cyan",
+    animationName: "colorchange",
+    animationDuration: "7s",
+
+    "& h1": {
+      color: "magenta"
+    },
   },
   knob: {
     margin: 10,
