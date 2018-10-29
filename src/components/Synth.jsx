@@ -7,28 +7,35 @@ class Synth extends React.Component {
     playing: false,
     synth: null,
     pattern: null,
-    loop: null
+    loop: null,
+    pingPongDelay: null,
+    filter: null
   }
 
   SCALE = ["C4", "D4", "F4", "G4", "A4", "C5", "D5", "F5", "G5", "A5"]
   step = 0
 
   componentDidMount() {
+    const delay = new Tone.PingPongDelay(0.25, 0.7)
+    delay.wet.value = 0.5
+    const filter = new Tone.Filter(250, "lowpass")
+    const vibrato = new Tone.Vibrato("32n")
     this.setState({
-      // pattern: new Tone.Pattern(this.playArp, this.SCALE),
+      pingPongDelay: delay,
+      filter: filter,
       loop: new Tone.Loop(this.playArp, "16n").start(0),
       synth: new Tone.Synth({
         oscillator: {
-          type: "sine",
+          type: "sawtooth",
           modulationFrequency: 0.2
         },
         envelope: {
-          attack: 0.02,
+          attack: 0.1,
           decay: 0.1,
           sustain: 0.2,
           release: 0.9
         }
-      }).toMaster()
+      }).chain(vibrato, filter, delay, Tone.Master)
     })
   }
 
@@ -39,8 +46,7 @@ class Synth extends React.Component {
         <h1>This is the synthesizer</h1>
         <div className={classes.knobHub}>
           <div className={classes.knob}
-            onClick={this.startLoop}
-            >
+            onClick={this.startLoop}>
             <p className={classes.knobLabel}>start</p>
           </div>
           <div className={classes.knob}
@@ -50,14 +56,6 @@ class Synth extends React.Component {
         </div>
       </div>
     )
-  }
-
-  handleMouseDown = () => {
-    this.state.synth.triggerAttack("C2")
-  }
-
-  handleMouseUp = () => {
-    this.state.synth.triggerRelease()
   }
 
   playArp = (time) => {
