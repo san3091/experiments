@@ -5,14 +5,21 @@ import Tone from "tone"
 class Synth extends React.Component {
   state = {
     playing: false,
-    synth: null
+    synth: null,
+    pattern: null,
+    loop: null
   }
+
+  SCALE = ["C4", "D4", "F4", "G4", "A4", "C5", "D5", "F5", "G5", "A5"]
+  step = 0
 
   componentDidMount() {
     this.setState({
+      // pattern: new Tone.Pattern(this.playArp, this.SCALE),
+      loop: new Tone.Loop(this.playArp, "16n").start(0),
       synth: new Tone.Synth({
         oscillator: {
-          type: "pwm",
+          type: "sine",
           modulationFrequency: 0.2
         },
         envelope: {
@@ -29,11 +36,17 @@ class Synth extends React.Component {
     const { classes } = this.props
     return (
       <div className={classes.wrapper}>
-        <h1>This is where the synthesizer will live</h1>
-        <div className={classes.knob}
-          onMouseDown={this.handleMouseDown}
-          onMouseUp={this.handleMouseUp}>
-          <p className={classes.knobLabel}>knob</p>
+        <h1>This is the synthesizer</h1>
+        <div className={classes.knobHub}>
+          <div className={classes.knob}
+            onClick={this.startLoop}
+            >
+            <p className={classes.knobLabel}>start</p>
+          </div>
+          <div className={classes.knob}
+            onClick={this.stopLoop}>
+            <p className={classes.knobLabel}>stop</p>
+          </div>
         </div>
       </div>
     )
@@ -46,6 +59,20 @@ class Synth extends React.Component {
   handleMouseUp = () => {
     this.state.synth.triggerRelease()
   }
+
+  playArp = (time) => {
+    console.log(time)
+    this.state.synth.triggerAttackRelease(this.SCALE[this.step % 10], "16n")
+    this.step++
+  }
+
+  startLoop = () => {
+    Tone.Transport.start()
+  }
+
+  stopLoop = () => {
+    Tone.Transport.stop()
+  }
 }
 
 const styles = {
@@ -53,9 +80,10 @@ const styles = {
     margin: "0 auto",
     marginLeft: 30,
     height: "100vh",
-    minWidth: "400px"
+    minWidth: "400px",
   },
   knob: {
+    margin: 10,
     borderRadius: "100%",
     backgroundColor: "black",
     width: "70px",
@@ -63,9 +91,19 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+
+    "&:first-child": {
+      marginLeft: 0
+    }
   },
   knobLabel: {
     color: "white",
+  },
+  knobHub: {
+    width: 200,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "left"
   }
 }
 
