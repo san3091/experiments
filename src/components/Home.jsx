@@ -1,9 +1,11 @@
 import * as React from "react"
 import injectSheet from "react-jss"
+import { Link } from "react-router-dom"
 
 const Home = ({ classes }) => (
   <header className={classes.header}>
     <h1>experiments</h1>
+    <Link to="/arp-ambient">make music</Link>
   </header>
 )
 
