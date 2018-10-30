@@ -77,16 +77,48 @@ class Synth extends React.Component {
 const styles = {
   "@keyframes colorchange": {
     "0%": {
-      backgroundColor: "cyan"
+      backgroundColor: "rgb(0, 255, 255)",
     },
     "33%": {
-      backgroundColor: "yellow"
+      backgroundColor: "rgb(255, 255, 0)"
     },
     "66%": {
-      backgroundColor: "magenta"
+      backgroundColor: "rgb(255, 0, 255)"
     },
     "100%": {
-      backgroundColor: "cyan"
+      backgroundColor: "rgb(0, 255, 255)"
+    }
+  },
+  "@keyframes textColorchange": {
+    "0%": {
+      color: "rgb(255, 255, 0)",
+      textShadow: "rgb(255, 255, 0)"
+    },
+    "33%": {
+      color: "rgb(255, 0, 255)",
+      textShadow: "rgb(255, 255, 0)"
+    },
+    "66%": {
+      color: "rgb(0, 255, 255)",
+      textShadow: "rgb(255, 0, 255)"
+    },
+    "100%": {
+      color: "rgb(255, 255, 0)",
+      textShadow: "rgb(0, 255, 255)"
+    }
+  },
+  "@keyframes shadowColorchange": {
+    "0%": {
+      boxShadow: "10px 10px rgb(255, 0, 255)"
+    },
+    "33%": {
+      boxShadow: "10px 10px rgb(0, 255, 255)"
+    },
+    "66%": {
+      boxShadow: "10px 10px rgb(255, 255, 0)"
+    },
+    "100%": {
+      boxShadow: "10px 10px rgb(255, 0, 255)"
     }
   },
   wrapper: {
@@ -99,12 +131,14 @@ const styles = {
   },
   wrapperParty: {
     backgroundColor: "cyan",
-    animationName: "colorchange",
-    animationDuration: "10s",
+    animation: "colorchange 10s infinite",
     textShadow: "5px 5px yellow",
+    animationDelay: "0.5s",
 
     "& h1": {
-      color: "magenta"
+      color: "magenta",
+      animation: "textColorchange 10s infinite",
+      animationDelay: "0.5s"
     },
   },
   knob: {
@@ -123,7 +157,9 @@ const styles = {
     }
   },
   knobParty: {
-    boxShadow: "13px 13px magenta"
+    boxShadow: "13px 13px magenta",
+    animation: "shadowColorchange 10s infinite",
+    animationDelay: "0.5s",
   },
   knobLabel: {
     color: "white",
