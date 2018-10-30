@@ -9,7 +9,7 @@ class Synth extends React.Component {
     pattern: null,
     loop: null,
     pingPongDelay: null,
-    filter: null
+    filter: null,
   }
 
   SCALE = ["C4", "D4", "F4", "G4", "A4", "C5", "D5", "F5", "G5", "A5"]
@@ -43,7 +43,7 @@ class Synth extends React.Component {
     const { classes } = this.props
     return (
       <div className={`${classes.wrapper} ${this.state.playing ? classes.wrapperParty : null}`}>
-        <h1>This is the synthesizer</h1>
+        <h1>landscapes</h1>
         <div className={classes.knobHub}>
           <div className={classes.knob}
             onClick={this.startLoop}>
@@ -100,7 +100,7 @@ const styles = {
   wrapperParty: {
     backgroundColor: "cyan",
     animationName: "colorchange",
-    animationDuration: "7s",
+    animationDuration: "10s",
 
     "& h1": {
       color: "magenta"
@@ -124,7 +124,7 @@ const styles = {
     color: "white",
   },
   knobHub: {
-    width: 200,
+    width: 500,
     display: "flex",
     flexDirection: "row",
     justifyContent: "left"
