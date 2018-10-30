@@ -45,11 +45,11 @@ class Synth extends React.Component {
       <div className={`${classes.wrapper} ${this.state.playing ? classes.wrapperParty : null}`}>
         <h1>landscapes</h1>
         <div className={classes.knobHub}>
-          <div className={classes.knob}
+          <div className={`${classes.knob} ${this.state.playing ? classes.knobParty: null}`}
             onClick={this.startLoop}>
             <p className={classes.knobLabel}>start</p>
           </div>
-          <div className={classes.knob}
+          <div className={`${classes.knob} ${this.state.playing ? classes.knobParty: null}`}
             onClick={this.stopLoop}>
             <p className={classes.knobLabel}>stop</p>
           </div>
@@ -59,7 +59,6 @@ class Synth extends React.Component {
   }
 
   playArp = (time) => {
-    console.log(time)
     this.state.synth.triggerAttackRelease(this.SCALE[this.step % 10], "16n")
     this.step++
   }
@@ -96,11 +95,13 @@ const styles = {
     paddingTop: 30,
     height: "100vh",
     minWidth: "400px",
+    transition: "text-shadow 0.5s ease-in-out",
   },
   wrapperParty: {
     backgroundColor: "cyan",
     animationName: "colorchange",
     animationDuration: "10s",
+    textShadow: "5px 5px yellow",
 
     "& h1": {
       color: "magenta"
@@ -115,10 +116,14 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    transition: "box-shadow 0.5s ease-in-out",
 
     "&:first-child": {
       marginLeft: 0
     }
+  },
+  knobParty: {
+    boxShadow: "13px 13px magenta"
   },
   knobLabel: {
     color: "white",
