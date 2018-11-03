@@ -1,11 +1,15 @@
 import * as React from "react"
 import injectSheet from "react-jss"
 import LeadSynth from "../models/synths/lead"
+import BassSynth from "../models/synths/bass"
+import Tone from "tone"
 
 class Synth extends React.Component {
   state = {
-    playing: false,
-    synth: null
+    leadPlaying: false,
+    bassPlaying: false,
+    synth: null,
+    bass: null,
   }
 
   SCALE = ["C4", "D4", "F4", "G4", "A4", "C5", "D5", "F5", "G5", "A5"]
@@ -13,30 +17,48 @@ class Synth extends React.Component {
 
   componentDidMount() {
     this.setState({
-      synth: new LeadSynth()
+      lead: new LeadSynth(),
+      bass: new BassSynth()
     })
+    Tone.Transport.start()
   }
 
   render() {
     const { classes } = this.props
     return (
-      <div className={`${classes.wrapper} ${this.state.playing ? classes.wrapperParty : null}`}>
+      <div className={`${classes.wrapper} ${this.anyPlaying() ? classes.wrapperParty : null}`}>
         <h1>landscapes</h1>
         <div className={classes.knobHub}>
-          <div className={`${classes.knob} ${this.state.playing ? classes.knobParty: null}`}
-            onClick={this.toggleLoop}>
-            <p className={classes.knobLabel}>{this.state.playing ? "stop" : "play"}</p>
+          <div className={`${classes.knob} ${this.state.leadPlaying ? classes.knobParty : null}`}
+            onClick={this.toggleLead}>
+            <p className={classes.knobLabel}>{this.state.leadPlaying ? "stop" : "play"}</p>
           </div>
-        </div>
+          <div className={`${classes.knob} ${this.state.bassPlaying ? classes.knobParty : null}`}
+            onClick={this.toggleBass}>
+            <p className={classes.knobLabel}>{this.state.bassPlaying ? "stop" : "play"}</p>
+          </div>
+         </div>
       </div>
     )
   }
 
-  toggleLoop = () => {
-    const { playing, synth } = this.state
-    playing ? synth.stop() : synth.start()
-    this.setState({ playing: !playing })
+  componentWillUnmount() {
+    Tone.Transport.stop()
   }
+
+  toggleLead = () => {
+    const { leadPlaying, lead} = this.state
+    leadPlaying ? lead.stop() : lead.start()
+    this.setState({ leadPlaying: !leadPlaying })
+  }
+
+  toggleBass = () => {
+    const { bassPlaying, bass } = this.state
+    bassPlaying ? bass.stop() : bass.start()
+    this.setState({ bassPlaying: !bassPlaying })
+  }
+
+  anyPlaying = () => this.state.leadPlaying || this.state.bassPlaying
 }
 
 const styles = {
