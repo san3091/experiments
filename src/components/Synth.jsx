@@ -1,41 +1,19 @@
 import * as React from "react"
 import injectSheet from "react-jss"
-import Tone from "tone"
+import LeadSynth from "../models/synths/lead"
 
 class Synth extends React.Component {
   state = {
     playing: false,
-    synth: null,
-    pattern: null,
-    loop: null,
-    pingPongDelay: null,
-    filter: null,
+    synth: null
   }
 
   SCALE = ["C4", "D4", "F4", "G4", "A4", "C5", "D5", "F5", "G5", "A5"]
   step = 0
 
   componentDidMount() {
-    const delay = new Tone.PingPongDelay(0.25, 0.7)
-    delay.wet.value = 0.5
-    const filter = new Tone.Filter(250, "lowpass")
-    const vibrato = new Tone.Vibrato("32n")
     this.setState({
-      pingPongDelay: delay,
-      filter: filter,
-      loop: new Tone.Loop(this.playArp, "16n").start(0),
-      synth: new Tone.Synth({
-        oscillator: {
-          type: "sawtooth",
-          modulationFrequency: 0.2
-        },
-        envelope: {
-          attack: 0.1,
-          decay: 0.1,
-          sustain: 0.2,
-          release: 0.9
-        }
-      }).chain(vibrato, filter, delay, Tone.Master)
+      synth: new LeadSynth()
     })
   }
 
@@ -46,31 +24,18 @@ class Synth extends React.Component {
         <h1>landscapes</h1>
         <div className={classes.knobHub}>
           <div className={`${classes.knob} ${this.state.playing ? classes.knobParty: null}`}
-            onClick={this.startLoop}>
-            <p className={classes.knobLabel}>start</p>
-          </div>
-          <div className={`${classes.knob} ${this.state.playing ? classes.knobParty: null}`}
-            onClick={this.stopLoop}>
-            <p className={classes.knobLabel}>stop</p>
+            onClick={this.toggleLoop}>
+            <p className={classes.knobLabel}>{this.state.playing ? "stop" : "play"}</p>
           </div>
         </div>
       </div>
     )
   }
 
-  playArp = (time) => {
-    this.state.synth.triggerAttackRelease(this.SCALE[this.step % 10], "16n")
-    this.step++
-  }
-
-  startLoop = () => {
-    this.setState({playing: true})
-    Tone.Transport.start()
-  }
-
-  stopLoop = () => {
-    this.setState({playing: false})
-    Tone.Transport.stop()
+  toggleLoop = () => {
+    const { playing, synth } = this.state
+    playing ? synth.stop() : synth.start()
+    this.setState({ playing: !playing })
   }
 }
 
@@ -132,7 +97,7 @@ const styles = {
   wrapperParty: {
     backgroundColor: "cyan",
     animation: "colorchange 10s infinite",
-    textShadow: "5px 5px yellow",
+    textShadow: "10px 10px yellow",
     animationDelay: "0.5s",
 
     "& h1": {
